@@ -1,0 +1,68 @@
+Aytug Karalar
+
+e4357
+HW#1
+
+// This program converts decimal numbers up to 2048 into binary form
+
+
+
+#include <stdio.h>
+
+
+
+void dec2bin(int a){
+	
+	int arbin[11] = {0,0,0,0,0,0,0,0,0,0,0};
+	
+	int remainder, i;
+
+	
+	printf("decimal number = %d\n binary = ", a);
+	
+	for(i = 0; i<11; i++){
+		
+		if(a >= 2){
+			
+			remainder = a % 2;
+			
+			arbin[10-i] = remainder;
+			
+			a = (int)(a / 2);
+		
+		}
+		
+		else{
+			
+			arbin[10-i] = a;
+			
+			break;
+		
+		}
+		
+	}
+
+	
+	for(i = 0; i < 11; i++){
+		
+		printf("%d",arbin[i]);
+		
+	}
+	
+}
+
+
+int main(void)
+{
+	
+	int x;
+
+	
+	printf("Enter a decimal number between 0 and 2048:\n");
+	scanf("%d",&x);
+	
+	dec2bin(x);
+	
+	return 0;
+
+}
