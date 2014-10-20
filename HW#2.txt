@@ -1,0 +1,17 @@
+Aytug Karalar
+
+
+e4357 
+HW#2
+
+How many text files and how many lines of text code in the exported offline code package?  
+-There is only one text file. it is "main.cpp". There is 10 lines of exported text code in it.
+
+How many files are different between (a) and (b)? (Use linux commands: find, wc, diff) (10 points)
+-There are two extra files in uvision folder: HelloWorld.uvopt, HelloWorld.uvproj
+
+what is the "Entry point address:" of your program? (hint: using readelf) 
+
+
+
+
