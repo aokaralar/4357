@@ -1,0 +1,155 @@
+//Final Project of E4357: Transmitter Side Code
+//Aytug Karalar, 11/30/2014
+
+/* Program Explanation : Sets the mbed up for wireless async communication, and send the data to 
+a similar node. Receiver of wireless side uses 7-segment display for showing the letters pressed on the computer keyboard. 
+Computer uses a async serial terminal to communicate*/
+
+#include "mbed.h"
+
+Serial pc(USBTX, USBRX); // tx, rx  - Serial connection through USB 
+Serial async_port(p13, p14); //set up TX and RX on pins 13 and 14
+
+ 
+char c; // the character we will send
+
+
+int main() {
+    async_port.baud(9600);  //set baud rate to 9600 (ie default)
+    //accept default format, of 8 bits, no parity
+    pc.printf("Press '0-9 and A-F' to see it on the receivers 7-segment display.\n");//write the purpose of the program on the terminal .
+
+
+    while(1) {
+            c = pc.getc();  // read the USB serial port  
+            pc.putc(c); // put it on the terminal display
+
+        async_port.putc(c); //transmit the character        
+    }
+}
+
+
+
+------------------------------------------------------------------------------------------------------------------
+//Final Project of E4357: Receiver Side Code
+//Aytug Karalar, 11/30/2014
+
+/* Program explanation : Sets the mbed up for wireless async communication, and send the data to 
+a similar node. Receiver of wireless side uses 7-segment display for showing the letters pressed on the computer keyboard. 
+Computer uses a async serial terminal to communicate Receiver side. this is is the receiver side */
+
+
+
+#include "mbed.h"
+
+BusOut display(p5, p6, p7, p8, p9, p10, p11, p12); // segments a,b,c,d,e,f,g,dp
+
+Serial async_port(p13, p14); //set up TX and RX on pins 13 and 14
+
+DigitalOut green_led(p26);  // green led
+DigitalOut blue_led(p25); // blue led
+
+char c; // the character we will send
+char recd_val; //the received value
+
+int main() {
+    async_port.baud(9600);  //set baud rate to 9600 (ie default)
+    //accept default format, of 8 bits, no parity
+    
+            //Sets leds according to incoming word from slave 
+        blue_led = 0;    //preset both to 0
+        green_led = 0;
+        display = ~0x40; //shows the dash character
+
+  
+    while(1) {
+
+       if (async_port.readable()==1) // Is there a character to be read? 
+            recd_val = async_port.getc(); //if yes, then read it    
+
+       //received character is printed on the 7-segment display and blue or green LED is lit depending on the character-number difference
+        if(recd_val == '0'){
+            blue_led = 1;
+            green_led = 0;
+            display = ~0x3F;                   
+        }
+        if(recd_val == '1'){
+            blue_led = 1;
+            green_led = 0;
+            display = ~0x06;            
+        }
+        if(recd_val == '2'){
+            blue_led = 1;
+            green_led = 0;
+            display = ~0x5B;            
+        }
+        if(recd_val == '3'){
+            blue_led = 1;
+            green_led = 0;
+            display = ~0x4F;            
+        }
+        if(recd_val == '4'){
+            blue_led = 1;
+            green_led = 0;
+            display = ~0x66;            
+        }
+        if(recd_val == '5'){
+            blue_led = 1;
+            green_led = 0;
+            display = ~0x6D;            
+        }
+        if(recd_val == '6'){
+            blue_led = 1;
+            green_led = 0;
+            display = ~0x7D;            
+        }
+        if(recd_val == '7'){
+            blue_led = 1;
+            green_led = 0;
+            display = ~0x07;            
+        }
+        if(recd_val == '8'){
+            blue_led = 1;
+            display = ~0x7F;            
+        }
+        if(recd_val == '9'){
+            blue_led = 1;
+            green_led = 0;
+            display = ~0x6F;            
+        }
+        if((recd_val == 'A') || (recd_val == 'a')){
+            green_led = 1;
+            blue_led = 0;
+            display = ~0x77;            
+        }
+        if(recd_val == 'B' || (recd_val == 'b')){
+            green_led = 1;
+            blue_led = 0;
+            display = ~0x7C;            
+        }
+        if(recd_val == 'C' || (recd_val == 'c')){
+            green_led = 1;
+            blue_led = 0;
+            display = ~0x39;            
+        }
+        if(recd_val == 'D' || (recd_val == 'd')){
+            green_led = 1;
+            blue_led = 0;
+            display = ~0x5E;            
+        }
+        if(recd_val == 'E' || (recd_val == 'e')){
+            green_led = 1;
+            blue_led = 0;
+            display = ~0x79;            
+        }
+        if(recd_val == 'F' || (recd_val == 'f')){
+            green_led = 1;
+            blue_led = 0;
+            display = ~0x71;            
+        }
+
+    }
+}
+
+
+
