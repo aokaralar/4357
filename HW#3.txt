@@ -1,0 +1,90 @@
+//Aytug Karalar
+//e4357
+//HW#3
+/* Program Example 14.1: Sets up a digital output pin using control registers, and flashes an led.
+
+*/
+// Define the addresses of digital I/O control registers, as pointers to volatile data
+
+//#include <LPC17xx.H>
+#include <mbed.h>
+#define FI02DIR0    (*(volatile unsigned char *)(0x2009C040))
+#define FI02PIN0    (*(volatile unsigned char *)(0x2009C054))
+
+void delay(void){
+    int j;
+    for (j = 0; j < 1000000; j++){
+        j++;
+        j--;
+    }
+}
+
+int main(void){
+
+    FI02DIR0 = 0xFF; //set port 2, lowest byte to output. I think we set 8 pins on Port 2 as output here.
+    while(1){
+    FI02PIN0 |= 0x01; // OR bit 0 with 1 to set pin high.
+    delay();
+    FI02PIN0 &= ~0x01; // AND bit 1 with 0 to set pin low.
+    delay();
+    }
+    
+}
+
+
+----------------------------------------------------------------------------------------------------------------
+
+/* Program Exercise 14.3: Uses digital input and output using control registers, and flashes a LED. 
+LEDs connect to mbed pins 25 and 26. Switch input to pin 9.
+Aytug Karalar
+HW#3
+*/
+// Define the addresses of digital I/O control registers, as pointers to volatile data
+
+#include <mbed.h>
+#define FI00DIR0    (*(volatile unsigned char *)(0x2009C000))
+#define FI00PIN0    (*(volatile unsigned char *)(0x2009C014))
+#define FI00DIR1    (*(volatile unsigned char *)(0x2009C001))
+#define FI00PIN1    (*(volatile unsigned char *)(0x2009C015))
+
+//some variables
+char a;
+char b;
+char i;
+
+#define n 100 // a delay of n ms
+void delay(void){   //delay function
+    int j;
+    for (j = 0; j < (25000*n); j++){
+        j++;
+        j--;
+    }
+}
+
+int main(void){
+
+    FI00DIR0 = 0x00; //set all bits of port 0 byte 0 to input.
+    FI00DIR1 = 0xFF; //set all bits of port 2 byte 0 to output.
+    while(1){
+        if((FI00PIN0 & 0x80) == 128){  //bit test port 0 pin 0 (mbed pin 7)
+            a = 0x01;              //this reverses the order of LED flashing
+            b = 0x02;              //based on the switch position
+        }
+        else{
+            a = 0x02;
+            b = 0x01;
+        }
+        FI00PIN1 |= a; // OR bit 0 with 1 to set pin high mbed pin 5
+        delay();
+        FI00PIN1 &= ~a; // AND bit 1 with 0 to set pin low. mbed pin 5
+        delay();
+        for(i = 0; i <= 3; i++){
+            FI00PIN1 |= b; // OR bit 0 with 1 to set pin high. mbed pin 6
+            delay();
+            FI00PIN1 &= ~b; // AND bit 1 with 0 to set pin low. mbed pin 6
+            delay();
+        }
+    }
+    
+}
+
